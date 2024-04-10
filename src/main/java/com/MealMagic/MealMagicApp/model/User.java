@@ -1,4 +1,4 @@
-package com.MealMagic.MealMagicApp.domain;
+package com.MealMagic.MealMagicApp.model;
 
 import jakarta.persistence.*;
 
