@@ -1,6 +1,7 @@
 package com.MealMagic.MealMagicApp.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -12,8 +13,7 @@ public class User {
     private String password;
     private String email;
 
-    public User(String username, String password, String email){
-        this.username = username;
+    public User( String email, String password){
         this.password = password;
         this.email = email;
     }
