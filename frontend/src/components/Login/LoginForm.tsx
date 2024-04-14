@@ -1,36 +1,77 @@
 import react, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { Navigate } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 
 const useStyles = createUseStyles({
     wrapper: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         height: '100vh',
+        width: '100%',
+        flexDirection: 'column',
+        color: 'var(--font-primary)',
     },
     form: {
         display: 'flex',
         flexDirection: 'column',
-        width: '300px',
-        gap: '10px',
+        width: '100%',
+        gap: '2rem',
+        padding: '1rem',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     inputWrapper: {
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',
     },
     label: {
         marginBottom: '5px',
     },
     input: {
-        padding: '5px',
+        width: '100%',
+        border: 'none',
+        padding: '1rem',
+        borderBottom: '2px solid var(--secondary)',
+        '&:focus':{
+            outline: 'none',
+            borderBottom: '3px solid var(--accents)',
+        }
     },
     button: {
-        padding: '5px',
-        backgroundColor: 'blue',
-        color: 'white',
+        width: '100%',
+        borderRadius: '2rem',
+        fontWeight: 'bold',
+        color: 'black',
         border: 'none',
         cursor: 'pointer',
+        padding: '1rem',
+        fontSize: '2rem',
+        '&:hover':{
+            backgroundColor: 'var(--font-primary)',
+            color: '#fff',
+        }
+    },
+    logo: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoImg: {
+        width: '90%',
+        height: 'auto',
+    },
+    check:{
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        width: '100%',
+    },
+    forgotPass:{
+        textDecoration: 'underline',
+        color: 'var(--font-primary)',
     },
 });
 
@@ -55,6 +96,9 @@ const LoginForm = () => {
 
     return (
         <div className={classes.wrapper}>
+            <div className={classes.logo}>
+                <img src={logo} className={classes.logoImg} alt="logo" />
+            </div>
             <form onSubmit={handleSubmit} className={classes.form}>
                 <div className={classes.inputWrapper}>
                     <label htmlFor="email" className={classes.label}>Email</label>
@@ -64,7 +108,14 @@ const LoginForm = () => {
                     <label htmlFor="password" className={classes.label}>Password</label>
                     <input type="password" id="password" name="password" className={classes.input} />
                 </div>
-                <button type="submit" className={classes.button}>Login</button>
+                <div className={classes.check}>
+                        <label>
+                            <input type="checkbox"/>
+                        Remember me
+                        </label>
+                        <a href="" className={classes.forgotPass}><p>Forgot password?</p></a>
+                    </div>
+                <button type="submit" className={classes.button}>Log in</button>
             </form>
         </div>
     )

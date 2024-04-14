@@ -1,38 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Coiny&display=swap');
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root{
+  --primary: rgba(255, 133, 46, 0.644);
+  --secondary: #01605A;
+  --accents: #FFD0A8;
+  --input-red: #E21A4B;
+  --input-green: #46d110;
+  --font-primary: #003734;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+html{
+  font-size: 62.5%;
 }
 
-.App-link {
-  color: #61dafb;
+body{
+  font-family: 'Coiny', cursive;
+  font-size: 1.6rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+a{
+  text-decoration: none;
 }
