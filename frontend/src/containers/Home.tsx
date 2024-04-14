@@ -1,6 +1,7 @@
 import { createUseStyles } from "react-jss";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Home/Header";
+import RecipesSection from "../components/Home/RecipesSection";
 
 const useStyles = createUseStyles({
     wrapper: {
@@ -15,7 +16,10 @@ const Home = () => {
     return (
         <div className={classes.wrapper}>
                 <Sidebar></Sidebar>
-                <Header></Header>
+                <div>
+                    <Header></Header>
+                    <RecipesSection></RecipesSection>
+                </div>
         </div>
     )
 };

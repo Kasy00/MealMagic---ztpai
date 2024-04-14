@@ -12,7 +12,7 @@ const useStyles = createUseStyles({
         alignItems: 'start',
         gap: '3rem',
         flexDirection: 'column',
-        minHeight: '100vh',
+        minHeight: '100%',
         padding: '2rem',
     },
     logo:{
