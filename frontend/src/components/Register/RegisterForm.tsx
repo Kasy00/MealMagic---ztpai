@@ -63,80 +63,86 @@ const useStyles = createUseStyles({
         width: '90%',
         height: 'auto',
     },
-    check:{
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        width: '100%',
-    },
-    forgotPass:{
-        textDecoration: 'underline',
-        color: 'var(--font-primary)',
-    },
     error: {
         color: 'red',
-    }
+    },
 });
 
-
-
-const LoginForm = () => {
+const RegisterForm = () => {
     const classes = useStyles();
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!emailRegex.test(email)) {
             setErrMessage('Invalid email!');
             return;
         }
 
-        // try{
-        //     const response = await loginUser(email, password);
-        //     if(!response.ok){
-        //         const errorMessage = response.message || 'Bad credentials';
-        //         setLoginError(errorMessage);
-        //     } else {
-        //         Navigate('/home');
-        //     }
-        // } catch (error){
-        //     setLoginError('An error occurred');
-        // }
+        if(password !== confirmPassword) {
+            setErrMessage('Passwords are different! Please try again.');
+            return;
+        }
+
+        if(password.length < 8) {
+            setErrMessage('Password must be at least 8 characters long!');
+            return;
+        }
+
+            // try {
+            //     const response = await registerUser(email, password);
+            //     if (!response.ok) {
+            //         const errorMessage = response.message || 'Bad credentials';
+            //         setLoginError(errorMessage);
+            //     } else {
+            //         Navigate('/home');
+            //     }
+            // } catch (error) {
+            //     setLoginError('An error occurred');
+            // }
     };
 
     return (
         <div className={classes.wrapper}>
-            <div className={classes.logo}>
-                <img src={logo} className={classes.logoImg} alt="logo" />
-            </div>
+            <img src={logo} alt="Logo" />
             {errMessage && <div className={classes.error}>{errMessage}</div>}
-            <form onSubmit={handleSubmit} className={classes.form}>
+            <form className={classes.form} onSubmit={handleSubmit}>
                 <div className={classes.inputWrapper}>
                     <label htmlFor="email" className={classes.label}>Email</label>
-                    <input type="email" id="email" name="email" value={email} className={classes.input} onChange={handleEmailChange} />
+                    <input className={classes.input} type="email" id="email" value={email} onChange={handleEmailChange} />
                 </div>
+
                 <div className={classes.inputWrapper}>
                     <label htmlFor="password" className={classes.label}>Password</label>
-                    <input type="password" id="password" name="password" className={classes.input} />
+                    <input className={classes.input} type="password" id="password" value={password} onChange={handlePasswordChange} />
                 </div>
-                <div className={classes.check}>
-                        <label>
-                            <input type="checkbox"/>
-                        Remember me
-                        </label>
-                        <a href="" className={classes.forgotPass}><p>Forgot password?</p></a>
-                    </div>
-                <button type="submit" className={classes.button}>Log in</button>
+
+                <div className={classes.inputWrapper}>
+                    <label htmlFor="confirmPassword" className={classes.label}>Confirm Password</label>
+                    <input className={classes.input} type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} />
+                </div>
+
+                <button className={classes.button} type="submit">Register</button>
             </form>
         </div>
-    )
+    );
 };
 
-export default LoginForm;
+export default RegisterForm;

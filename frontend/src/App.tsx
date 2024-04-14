@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { Route, Navigate, Routes } from 'react-router-dom';
 import Login from './containers/Login';
+import Register from './containers/Register';
 
 function App() {
   console.log('hello!')
@@ -32,6 +33,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<Login />} />
+      <Route path='/register' element={<Register />} />
     </Routes>
   );
 }
