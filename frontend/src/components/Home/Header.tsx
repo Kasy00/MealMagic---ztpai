@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
         justifyContent: 'center',
         backgroundColor: 'var(--secondary)',
         gap: '3rem',
-        height: '20%',
+        
     },
     ingredientsForm: {
         display: 'flex',

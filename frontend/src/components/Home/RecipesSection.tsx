@@ -1,5 +1,6 @@
 import react, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
+import RecipeCard from '../RecipeCard';
 
 const useStyles = createUseStyles({
     section: {
@@ -34,6 +35,12 @@ const useStyles = createUseStyles({
         color: 'var(--accents)',
         fontSize: 'clamp(2.5rem, 2.2vw, 1.5rem)',
     },
+    recipeCards: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '1rem',
+        padding: '1rem',
+    },
 });
 
 const RecipesSection = () => {
@@ -42,10 +49,27 @@ const RecipesSection = () => {
         <div className={classes.section}>
             <div className={classes.recipes}>
                 <h3 className={classes.recipeHeader}>Recipes suggested for you</h3>
+                <div className={classes.recipeCards}>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                </div>
             </div>
             
             <div className={classes.trending}>
                 <h3 className={classes.trendingHeader}>Trending</h3>
+                <div className={classes.recipeCards}>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                    <RecipeCard></RecipeCard>
+                </div>
             </div>
         </div>
     );
