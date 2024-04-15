@@ -28,9 +28,11 @@ const useStyles = createUseStyles({
     },
     recipeHeader: {
         color: 'var(--font-primary)',
+        fontSize: 'clamp(2.5rem, 2vw, 2rem)',
     },
     trendingHeader: {
         color: 'var(--accents)',
+        fontSize: 'clamp(2.5rem, 2.2vw, 1.5rem)',
     },
 });
 

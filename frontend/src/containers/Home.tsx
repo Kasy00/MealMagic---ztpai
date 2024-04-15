@@ -7,7 +7,7 @@ const useStyles = createUseStyles({
     wrapper: {
         display: 'grid',
         gridTemplateColumns: '1fr 4fr',
-        minHeight: '100%',
+        minHeight: '100vh',
     }
 });
 

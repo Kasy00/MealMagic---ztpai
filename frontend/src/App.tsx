@@ -5,6 +5,7 @@ import { Route, Navigate, Routes } from 'react-router-dom';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Home from './containers/Home';
+import Profile from './containers/Profile';
 
 function App() {
   console.log('hello!')
@@ -36,6 +37,7 @@ function App() {
       <Route path='/' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/home' element={<Home />} />
+      <Route path='/profile' element={<Profile />} />
     </Routes>
   );
 }
