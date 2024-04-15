@@ -8,18 +8,23 @@ const useStyles = createUseStyles({
         display: 'grid',
         gridTemplateColumns: '1fr 4fr',
         minHeight: '100vh',
-    }
+    },
+    '@media (max-width: 768px)': {
+        wrapper: {
+            gridTemplateColumns: '1fr',
+        },
+    },
 });
 
 const Home = () => {
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>
-                <Sidebar></Sidebar>
-                <div>
-                    <Header></Header>
-                    <RecipesSection></RecipesSection>
-                </div>
+            <Sidebar></Sidebar>
+            <div>
+                <Header></Header>
+                <RecipesSection></RecipesSection>
+            </div>
         </div>
     )
 };

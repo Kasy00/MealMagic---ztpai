@@ -8,7 +8,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        height: '100vh',
+        height: '100%',
         width: '100%',
         flexDirection: 'column',
         color: 'var(--font-primary)',
@@ -70,10 +70,15 @@ const useStyles = createUseStyles({
 
 const RegisterForm = () => {
     const classes = useStyles();
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
+
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value);
+    };
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -121,9 +126,16 @@ const RegisterForm = () => {
 
     return (
         <div className={classes.wrapper}>
-            <img src={logo} alt="Logo" />
+            <div className={classes.logo}>
+                <img src={logo} className={classes.logoImg} alt="logo" />
+            </div>
             {errMessage && <div className={classes.error}>{errMessage}</div>}
             <form className={classes.form} onSubmit={handleSubmit}>
+                <div className={classes.inputWrapper}>
+                    <label htmlFor="username" className={classes.label}>Username</label>
+                    <input className={classes.input} type="text" id="username" value={username} onChange={handleUsernameChange} />
+                </div>
+
                 <div className={classes.inputWrapper}>
                     <label htmlFor="email" className={classes.label}>Email</label>
                     <input className={classes.input} type="email" id="email" value={email} onChange={handleEmailChange} />

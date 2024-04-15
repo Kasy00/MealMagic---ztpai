@@ -41,6 +41,18 @@ const useStyles = createUseStyles({
         gap: '1rem',
         padding: '1rem',
     },
+
+    '@media (max-width: 768px)': {
+        section: {
+            gridTemplateColumns: '1fr',
+        },
+        recipes: {
+            marginBottom: '1rem',
+        },
+        trending: {
+            marginTop: '1rem',
+        },
+    },
 });
 
 const RecipesSection = () => {

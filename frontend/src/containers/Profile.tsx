@@ -16,6 +16,14 @@ const useStyles = createUseStyles({
         alignItems: 'center',
         padding: '2rem',
     },
+    '@media (max-width: 768px)': {
+        wrapper: {
+            gridTemplateColumns: '1fr',
+        },
+        profileContainer: {
+            padding: '1rem',
+        },
+    },
 });
 
 const Profile = () => {

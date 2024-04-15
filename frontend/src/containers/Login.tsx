@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import LoginForm  from '../components/Login/LoginForm';
+import LoginForm from '../components/Login/LoginForm';
 import LoginFormFooter from '../components/Login/LoginFormFooter';
 import background from '../assets/background.png';
 
@@ -21,6 +21,11 @@ const useStyles = createUseStyles({
         backgroundColor: 'var(--primary)',
         width: 'clamp(15%, 30% + 2vw, 40%)',
     },
+    '@media (max-width: 768px)': {
+        wrapper: {
+            width: '80%',
+        },
+    },
 });
 
 const Login = () => {
@@ -32,7 +37,7 @@ const Login = () => {
                 <LoginFormFooter />
             </div>
         </div>
-    )
-};  
+    );
+};
 
 export default Login;

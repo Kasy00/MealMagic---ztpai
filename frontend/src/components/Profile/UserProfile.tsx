@@ -81,7 +81,7 @@ const UserProfile = ()  => {
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={favouritesIcon} alt="favourites recipes" />Favourites recipes</a></li>
-                <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} href="/logout"><img src={logoutIcon} alt="logout" />Logout</a></li>
+                <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} href="/"><img src={logoutIcon} alt="logout" />Logout</a></li>
             </ul>
         </div>
     );

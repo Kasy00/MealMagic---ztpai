@@ -75,7 +75,7 @@ const useStyles = createUseStyles({
     },
     error: {
         color: 'red',
-    }
+    },
 });
 
 
@@ -132,7 +132,7 @@ const LoginForm = () => {
                         Remember me
                         </label>
                         <a href="" className={classes.forgotPass}><p>Forgot password?</p></a>
-                    </div>
+                </div>
                 <button type="submit" className={classes.button}>Log in</button>
             </form>
         </div>

@@ -21,6 +21,11 @@ const useStyles = createUseStyles({
         backgroundColor: 'var(--primary)',
         width: 'clamp(15%, 30% + 2vw, 40%)',
     },
+    '@media (max-width: 768px)': {
+        wrapper: {
+            width: '80%',
+        },
+    },
 });
 
 const Register = () => {
