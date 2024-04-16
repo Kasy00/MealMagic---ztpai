@@ -11,6 +11,7 @@ MealMagic is a practical application that inspires you to create tasty dishes us
 ## Technologies
 - Frontend:
   - React
+  - Typescript
   - CSS (z wykorzystaniem JSS)
 - Backend:
   - Java
