@@ -8,7 +8,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        height: '100vh',
+        minHeight: '100vh',
         width: '100%',
         flexDirection: 'column',
         color: 'var(--font-primary)',
