@@ -13,37 +13,33 @@ import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 function App() {
   const [jwt, setJwt] = useLocalState("", "jwt");
 
-  useEffect(() => {
-    if (!jwt) {
-      const reqBody = {
-        'email': 'test@test.com',
-        'password': 'password'
-      };
+  // useEffect(() => {
+  //   if (!jwt) {
+  //     const reqBody = {
+  //       'email': 'test@test.com',
+  //       'password': 'password'
+  //     };
   
-      fetch('/rest/auth/login', {
-        'method': 'POST',
-        'headers': {
-          'Content-Type': 'application/json',
-        },
-        'body': JSON.stringify(reqBody),
-      })
-        .then(response => {
-          if(!response.ok){
-            throw new Error(`Http error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          setJwt(data.token);
-          console.log(data);
-        })
-        .catch(error => console.error('Error ', error));
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log(jwt);
-  }, [jwt]);
+  //     fetch('/rest/auth/login', {
+  //       'method': 'POST',
+  //       'headers': {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       'body': JSON.stringify(reqBody),
+  //     })
+  //       .then(response => {
+  //         if(!response.ok){
+  //           throw new Error(`Http error! status: ${response.status}`);
+  //         }
+  //         return response.json();
+  //       })
+  //       .then(data => {
+  //         setJwt(data.token);
+  //         console.log(data);
+  //       })
+  //       .catch(error => console.error('Error ', error));
+  //   }
+  // }, []);
 
   return (
     <Routes>

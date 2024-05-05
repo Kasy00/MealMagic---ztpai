@@ -2,6 +2,9 @@ import react, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { Navigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import useLocalState from '../../util/useLocalStorage';
+import axios from 'axios';
+import { isValidEmail, loginUser } from '../../services/UserService';
 
 const useStyles = createUseStyles({
     wrapper: {
@@ -78,37 +81,39 @@ const useStyles = createUseStyles({
     },
 });
 
-
-
 const LoginForm = () => {
     const classes = useStyles();
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
+    const [jwt, setJwt] = useLocalState('', 'jwt');
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     };
 
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegex.test(email)) {
+        if (!isValidEmail(email)) {
             setErrMessage('Invalid email!');
             return;
-        }
+        };
 
-        // try{
-        //     const response = await loginUser(email, password);
-        //     if(!response.ok){
-        //         const errorMessage = response.message || 'Bad credentials';
-        //         setLoginError(errorMessage);
-        //     } else {
-        //         Navigate('/home');
-        //     }
-        // } catch (error){
-        //     setLoginError('An error occurred');
-        // }
+        try {
+            const data = await loginUser(email, password);
+
+            if (data.success) {
+                setJwt(data.token);
+                window.location.href = '/home';
+            }
+        } catch (error) {
+            setErrMessage('Invalid email or password!');
+        }
     };
 
     return (
@@ -120,11 +125,23 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit} className={classes.form}>
                 <div className={classes.inputWrapper}>
                     <label htmlFor="email" className={classes.label}>Email</label>
-                    <input type="email" id="email" name="email" value={email} className={classes.input} onChange={handleEmailChange} />
+                    <input 
+                        type="email" 
+                        id="email" 
+                        value={email} 
+                        className={classes.input} 
+                        onChange={handleEmailChange} 
+                    />
                 </div>
                 <div className={classes.inputWrapper}>
                     <label htmlFor="password" className={classes.label}>Password</label>
-                    <input type="password" id="password" name="password" className={classes.input} />
+                    <input 
+                        type="password" 
+                        id="password"
+                        value={password}
+                        className={classes.input}
+                        onChange={handlePasswordChange}
+                    />
                 </div>
                 <div className={classes.check}>
                         <label>
