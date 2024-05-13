@@ -72,7 +72,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Validation errors: " + result.getAllErrors());
         }
 
-        userService.saveUser(userDto);
+        userService.saveUser(userDto, false);
         return ResponseEntity.ok("User registered successfully. Please login.");
     }
 

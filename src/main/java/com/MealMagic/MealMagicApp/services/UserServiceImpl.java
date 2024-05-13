@@ -27,18 +27,28 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void saveUser(UserDto userDto){
+    public void saveUser(UserDto userDto, boolean isAdmin){
         System.out.println("Received email: " + userDto.getEmail() + userDto.getUsername() + userDto.getPassword());
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        if(role == null){
-            role = checkRoleExist();
+        Role role = roleRepository.findByName("ROLE_USER");
+        if (role == null){
+            role = createRole("ROLE_USER");
         }
+
         user.setRoles(Arrays.asList(role));
+
+        if (isAdmin) {
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+            if (adminRole == null) {
+                adminRole = createRole("ROLE_ADMIN");
+            }
+            user.getRoles().add(adminRole);
+        }
+
         userRepository.save(user);
     }
 
@@ -62,9 +72,9 @@ public class UserServiceImpl implements UserService{
         return userDto;
     }
 
-    private Role checkRoleExist(){
+    private Role createRole(String name){
         Role role = new Role();
-        role.setName("ROLE_ADMIN");
+        role.setName(name);
         return roleRepository.save(role);
     }
 }
