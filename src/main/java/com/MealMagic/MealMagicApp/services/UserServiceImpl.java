@@ -5,6 +5,7 @@ import com.MealMagic.MealMagicApp.model.User;
 import com.MealMagic.MealMagicApp.model.UserDto;
 import com.MealMagic.MealMagicApp.repositories.RoleRepository;
 import com.MealMagic.MealMagicApp.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void saveUser(UserDto userDto){
+        System.out.println("Received email: " + userDto.getEmail() + userDto.getUsername() + userDto.getPassword());
         User user = new User();
+        user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService{
 
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         return userDto;
     }

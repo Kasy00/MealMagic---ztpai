@@ -2,6 +2,7 @@ import react, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { Navigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { registerUser } from '../../services/UserService';
 
 const useStyles = createUseStyles({
     wrapper: {
@@ -64,6 +65,9 @@ const useStyles = createUseStyles({
         height: 'auto',
     },
     error: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         color: 'red',
     },
 });
@@ -92,7 +96,7 @@ const RegisterForm = () => {
         setConfirmPassword(e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -111,17 +115,21 @@ const RegisterForm = () => {
             return;
         }
 
-            // try {
-            //     const response = await registerUser(email, password);
-            //     if (!response.ok) {
-            //         const errorMessage = response.message || 'Bad credentials';
-            //         setLoginError(errorMessage);
-            //     } else {
-            //         Navigate('/home');
-            //     }
-            // } catch (error) {
-            //     setLoginError('An error occurred');
-            // }
+        try{
+            console.log('Registering user:', username, email, password);
+            const data = await registerUser(username, email, password);
+            if(data) {
+                setErrMessage('User registered successfully! Redirecting to login page...');
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                setErrMessage(data);
+            }
+        } catch(error) {
+            console.error('Error registering user:', error);
+            setErrMessage('Error registering user. Please try again.');
+        }
     };
 
     return (
