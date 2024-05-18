@@ -79,6 +79,7 @@ const useStyles = createUseStyles({
         backgroundColor: 'var(--accents)',
         color: 'var(--font-primary)',
         fontSize: '1.6rem',
+        fontWeight: 'bold',
         border: 'none',
         cursor: 'pointer',
         transition: '0.2s ease-in-out',
@@ -88,7 +89,11 @@ const useStyles = createUseStyles({
     },
 });
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    onFormSubmit: (newIngredients: string[]) => void;
+}
+
+const Header: React.FC<HeaderProps> = (props: any) => {
     const maxIngredients = 8;
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [ingredientInput, setIngredientInput] = useState<string>('');
@@ -119,11 +124,17 @@ const Header: React.FC = () => {
         setIngredients([...ingredients]);
     };
 
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        props.onFormSubmit(ingredients);
+        console.log('Form submitted header');
+    }
+
     const classes = useStyles();
     return (
         <div className={classes.header}>
             <div className={classes.upperHeader}>
-                <form method="POST" className={classes.ingredientsForm} action="handleRecipes">
+                <form method="POST" className={classes.ingredientsForm} onSubmit={handleFormSubmit} >
                         <input 
                             type="text" 
                             className={classes.searchBar} 
@@ -138,7 +149,7 @@ const Header: React.FC = () => {
                         <button className={classes.headerBtn} type="button" id="deleteIngredientButton" onClick={handleDeleteIngredient}>
                             Delete
                         </button>
-                        <button className={classes.headerBtn} type="button">Search</button>
+                        <button className={classes.headerBtn} type="submit">Search</button>
                 </form>
                 <div>
                     <a href="/profile" className={classes.profile}>

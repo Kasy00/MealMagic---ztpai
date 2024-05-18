@@ -1,6 +1,7 @@
-import react, { useState } from 'react';
+import react, { useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import RecipeCard from '../RecipeCard';
+import axios from 'axios';
 
 const useStyles = createUseStyles({
     section: {
@@ -55,36 +56,81 @@ const useStyles = createUseStyles({
     },
 });
 
-const RecipesSection = () => {
+type Recipe = {
+    image: string;
+    title: string;
+};
+
+const RecipesSection = (props: any) => {
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [trendingRecipes, setTrendingRecipes] = useState<Recipe[]>([]);
     const classes = useStyles();
+    const apiKey = "bfa43ec4eb6c4c0ead14ff8c102dfb29";
+
+    const fetchRecipes = async () => {
+        try {
+            if (props.searchClicked && props.ingredients.length > 0) {
+                const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
+                    params: {
+                        apiKey: apiKey,
+                        includeIngredients: props.ingredients.join(','),
+                        number: 9,
+                    }
+                });
+
+                const recipeData = response.data.results.map((recipe: { image: string; title: string; }) => ({ image: recipe.image, title: recipe.title }));
+
+                setRecipes(recipeData);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchTrendingRecipes = async () => {
+        try {
+            const response = await axios.get('https://api.spoonacular.com/recipes/random', {
+                params: {
+                    apiKey: apiKey,
+                    number: 3,
+                }
+            });
+
+            const trendingRecipeData = response.data.recipes.map((recipe: { image: string; title: string; }) => ({ image: recipe.image, title: recipe.title }));
+
+            setTrendingRecipes(trendingRecipeData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchRecipes();
+    }, [props.ingredients, props.searchClicked]);
+
+    useEffect(() => {
+        //fetchTrendingRecipes();
+    }, []);
+
     return (
         <div className={classes.section}>
             <div className={classes.recipes}>
                 <h3 className={classes.recipeHeader}>Recipes suggested for you</h3>
                 <div className={classes.recipeCards}>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
+                    {recipes.map((recipe, index) => <RecipeCard key={index} image={recipe.image} title={recipe.title} />)}
                 </div>
             </div>
             
             <div className={classes.trending}>
                 <h3 className={classes.trendingHeader}>Trending</h3>
                 <div className={classes.recipeCards}>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
-                    <RecipeCard></RecipeCard>
+                    {trendingRecipes.map((recipe, index) => <RecipeCard key={index} image={recipe.image} title={recipe.title} />)}
                 </div>
             </div>
         </div>
     );
 };
+
+
 
 export default RecipesSection;
