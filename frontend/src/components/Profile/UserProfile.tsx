@@ -5,6 +5,7 @@ import favouritesIcon from '../../assets/favourites.svg';
 import logoutIcon from '../../assets/logout.svg';
 import settingsIcon from '../../assets/settings.svg';
 import profileBasic from '../../assets/profile-basic.jpg';
+import { logoutUser } from '../../services/UserService';
 
 const useStyles = createUseStyles({
     profileCard: {
@@ -89,7 +90,7 @@ const UserProfile = ()  => {
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={favouritesIcon} alt="favourites recipes" />Favourites recipes</a></li>
-                <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} href="/"><img src={logoutIcon} alt="logout" />Logout</a></li>
+                <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} onClick={logoutUser}><img src={logoutIcon} alt="logout" />Logout</a></li>
             </ul>
         </div>
     );

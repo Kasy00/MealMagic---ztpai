@@ -39,3 +39,8 @@ export const registerUser = async (username: string, email: string, password: st
         throw error;
     }
 };
+
+export const logoutUser = () => {
+    localStorage.clear();
+    window.location.href = '/';
+}
