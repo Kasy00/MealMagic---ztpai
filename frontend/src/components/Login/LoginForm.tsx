@@ -5,6 +5,7 @@ import logo from '../../assets/logo.png';
 import useLocalState from '../../util/useLocalStorage';
 import axios from 'axios';
 import { isValidEmail, loginUser } from '../../services/UserService';
+import { jwtDecode } from 'jwt-decode';
 
 const useStyles = createUseStyles({
     wrapper: {
@@ -87,6 +88,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
     const [jwt, setJwt] = useLocalState('', 'jwt');
+    const [decodedJwt, setDecodedJwt] = useLocalState('', 'decodedJwt');
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -109,6 +111,7 @@ const LoginForm = () => {
 
             if (data.success) {
                 setJwt(data.token);
+                setDecodedJwt(jwtDecode(data.token));
                 window.location.href = '/home';
             }
         } catch (error) {

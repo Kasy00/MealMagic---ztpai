@@ -1,7 +1,5 @@
-import { create } from 'domain';
-import react, { useState } from 'react';
+import react, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { classicNameResolver } from 'typescript';
 import bmiIcon from '../../assets/BMI.svg';
 import favouritesIcon from '../../assets/favourites.svg';
 import logoutIcon from '../../assets/logout.svg';
@@ -70,13 +68,23 @@ const useStyles = createUseStyles({
 });
 
 const UserProfile = ()  => {
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        const decodedJwt = localStorage.getItem('decodedJwt');
+        if (decodedJwt) {
+            const { username } = JSON.parse(decodedJwt);
+            setUsername(username);
+        }
+    }, []);
+
     const classes = useStyles();
     return (
         <div className={classes.profileCard}>
             <button className={classes.profileAvatarBtn}>
                 <img src={profileBasic} className={classes.profileAvatar} alt="default avatar" />
             </button>
-            <h2 className={classes.userInfo}>Username</h2>
+            <h2 className={classes.userInfo}> {username} </h2>
             <ul className={classes.userList}>
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>

@@ -1,8 +1,7 @@
-import react, { useState } from 'react';
+import react, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import searchIcon from '../../assets/search.svg';
 import profileIcon from '../../assets/profile.svg';
-import { profile } from 'console';
 
 const useStyles = createUseStyles({
     header: {
@@ -32,6 +31,12 @@ const useStyles = createUseStyles({
         backgroundColor: 'var(--accents)',
         padding: '1rem',
         borderRadius: '3rem',
+    },
+    ingredientItem: {
+        padding: '0.5rem 1rem',
+        backgroundColor: 'var(--font-primary)',
+        color: 'var(--accents)',
+        borderRadius: '2rem',
     },
     profile: {
         display: 'flex',
@@ -83,27 +88,72 @@ const useStyles = createUseStyles({
     },
 });
 
-const Header = () => {
+const Header: React.FC = () => {
+    const maxIngredients = 8;
+    const [ingredients, setIngredients] = useState<string[]>([]);
+    const [ingredientInput, setIngredientInput] = useState<string>('');
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        const decodedJwt = localStorage.getItem('decodedJwt');
+        if (decodedJwt) {
+            const { username } = JSON.parse(decodedJwt);
+            setUsername(username);
+        }
+    }, []);
+
+    const handleAddIngredient = () => {
+        if(ingredients.indexOf(ingredientInput.trim()) > -1) {
+            alert('Ingredient already added!');
+        } else if (ingredientInput.trim() !== '' && ingredients.length !== maxIngredients) {
+            setIngredients([...ingredients, ingredientInput.trim()]);
+            setIngredientInput('');
+        } else if(ingredients.length >= maxIngredients) {
+            alert('You can add only up to 8 ingredients!');
+        }
+        setIngredientInput('');
+    };
+
+    const handleDeleteIngredient = () => {
+        ingredients.pop();
+        setIngredients([...ingredients]);
+    };
+
     const classes = useStyles();
     return (
         <div className={classes.header}>
             <div className={classes.upperHeader}>
                 <form method="POST" className={classes.ingredientsForm} action="handleRecipes">
-                        <input type="text" className={classes.searchBar} name="search" placeholder="Enter ingredients here"/>
-                        <button className={classes.headerBtn} type="button">Add</button>
-                        <button className={classes.headerBtn} type="button">Delete</button>
-
-                        <input type="hidden" id="hiddenIngredients"/>
+                        <input 
+                            type="text" 
+                            className={classes.searchBar} 
+                            id="searchBar"
+                            onChange={(e) => setIngredientInput(e.target.value)}
+                            value={ingredientInput}
+                            placeholder="Enter ingredients here"
+                        />
+                        <button className={classes.headerBtn} type="button" id="addIngredientButton" onClick={handleAddIngredient}>
+                            Add
+                        </button>
+                        <button className={classes.headerBtn} type="button" id="deleteIngredientButton" onClick={handleDeleteIngredient}>
+                            Delete
+                        </button>
                         <button className={classes.headerBtn} type="button">Search</button>
                 </form>
                 <div>
                     <a href="/profile" className={classes.profile}>
                         <img src={profileIcon} alt="avatar" className={classes.avatarImg}/>
-                        <span className={classes.userName}>Username</span>
+                        <span className={classes.userName}> {username} </span>
                     </a>
                 </div>
             </div>
-            <div className={classes.addedIngredients}></div>
+            <div className={classes.addedIngredients} id="addedIngredients">
+                {ingredients.map((ingredient, index) => (
+                    <div key={index} className={classes.ingredientItem}>
+                        {ingredient}
+                    </div>
+                    ))}
+            </div>
         </div>
     );
 };
