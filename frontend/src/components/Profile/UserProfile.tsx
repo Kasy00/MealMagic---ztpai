@@ -1,11 +1,15 @@
 import react, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
+import Modal from 'react-modal';
 import bmiIcon from '../../assets/BMI.svg';
 import favouritesIcon from '../../assets/favourites.svg';
 import logoutIcon from '../../assets/logout.svg';
 import settingsIcon from '../../assets/settings.svg';
 import profileBasic from '../../assets/profile-basic.jpg';
 import { logoutUser } from '../../services/UserService';
+import AvatarModal from '../AvatarModal';
+
+Modal.setAppElement('#root');
 
 const useStyles = createUseStyles({
     profileCard: {
@@ -70,6 +74,7 @@ const useStyles = createUseStyles({
 
 const UserProfile = ()  => {
     const [username, setUsername] = useState('');
+    const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
@@ -79,12 +84,21 @@ const UserProfile = ()  => {
         }
     }, []);
 
+    const showAvatarModal = () => {
+        setIsAvatarModalOpen(true);
+    }
+
+    const hideAvatarModal = () => {
+        setIsAvatarModalOpen(false);
+    }
+
     const classes = useStyles();
     return (
         <div className={classes.profileCard}>
-            <button className={classes.profileAvatarBtn}>
+            <button className={classes.profileAvatarBtn} onClick={showAvatarModal}>
                 <img src={profileBasic} className={classes.profileAvatar} alt="default avatar" />
             </button>
+            <AvatarModal isOpen={isAvatarModalOpen} onRequestClose={hideAvatarModal} />
             <h2 className={classes.userInfo}> {username} </h2>
             <ul className={classes.userList}>
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>

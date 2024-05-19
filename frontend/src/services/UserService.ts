@@ -43,4 +43,4 @@ export const registerUser = async (username: string, email: string, password: st
 export const logoutUser = () => {
     localStorage.clear();
     window.location.href = '/';
-}
+};
