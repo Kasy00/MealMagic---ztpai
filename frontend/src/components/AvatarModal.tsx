@@ -76,8 +76,8 @@ const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => 
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log('Avatar set:', response.data);
                 fileInput.current.value = '';
+                onRequestClose();
             } catch (error) {
                 console.error('Error setting avatar:', error);
             }

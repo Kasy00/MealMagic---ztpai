@@ -27,7 +27,7 @@ public class UploadController {
     private UserDetailsRepository userDetailsRepository;
     @Autowired
     private UserRepository userRepository;
-    public static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
+    public static final String UPLOAD_DIRECTORY = "uploads";
 
     @PostMapping("/avatar")
     public ResponseEntity<String> uploadAvatar(@RequestParam("file") MultipartFile file, @RequestParam("userId") long userId) throws IOException {
@@ -46,6 +46,8 @@ public class UploadController {
             Path fileNameAndPath = uploadPath.resolve(uniqueFileName);
             Files.copy(file.getInputStream(), fileNameAndPath);
 
+            String pathWithForwardSlashes = fileNameAndPath.toString().replace("\\", "/");
+
             Optional<UserDetails> userDetailsOptional = userDetailsRepository.findById(userId);
             UserDetails userDetails;
             if (userDetailsOptional.isPresent()) {
@@ -60,7 +62,7 @@ public class UploadController {
                 System.out.println("Created new UserDetails for user with ID " + userId);
             }
 
-            userDetails.setAvatarPath(fileNameAndPath.toString());
+            userDetails.setAvatarPath(pathWithForwardSlashes);
             userDetailsRepository.save(userDetails);
             System.out.println("Avatar path saved to the database: " + fileNameAndPath.toString());
 
@@ -70,7 +72,7 @@ public class UploadController {
         }
     }
 
-    @GetMapping("avatarPath")
+    @GetMapping("/avatarPath")
     public ResponseEntity<String> getUserAvatarPath(@RequestParam("userId") long userId) {
         Optional<UserDetails> userDetailsOptional = userDetailsRepository.findById(userId);
         if (userDetailsOptional.isPresent()) {

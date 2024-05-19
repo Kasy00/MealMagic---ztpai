@@ -8,6 +8,7 @@ import settingsIcon from '../../assets/settings.svg';
 import profileBasic from '../../assets/profile-basic.jpg';
 import { logoutUser } from '../../services/UserService';
 import AvatarModal from '../AvatarModal';
+import axios from 'axios';
 
 Modal.setAppElement('#root');
 
@@ -74,15 +75,33 @@ const useStyles = createUseStyles({
 
 const UserProfile = ()  => {
     const [username, setUsername] = useState('');
+    const [userId, setUserId] = useState('');
+    const [avatarPath, setAvatarPath] = useState('');
     const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
         if (decodedJwt) {
-            const { username } = JSON.parse(decodedJwt);
+            const { username, userId } = JSON.parse(decodedJwt);
             setUsername(username);
+            setUserId(userId);
         }
     }, []);
+
+    const fetchAvatarPath = async () => {
+        try {
+            if (userId) {
+                const response = await axios.get('/rest/upload/avatarPath', {params: {userId}});
+                setAvatarPath(`http://localhost:8080/${response.data}`);
+            }
+        } catch (error) {
+            console.error('Error fetching avatar path:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAvatarPath();
+    }, [userId]);
 
     const showAvatarModal = () => {
         setIsAvatarModalOpen(true);
@@ -90,13 +109,22 @@ const UserProfile = ()  => {
 
     const hideAvatarModal = () => {
         setIsAvatarModalOpen(false);
+        fetchAvatarPath();
     }
 
     const classes = useStyles();
     return (
         <div className={classes.profileCard}>
             <button className={classes.profileAvatarBtn} onClick={showAvatarModal}>
-                <img src={profileBasic} className={classes.profileAvatar} alt="default avatar" />
+                <img 
+                    src={avatarPath} 
+                    className={classes.profileAvatar} 
+                    alt="avatar" 
+                    onError={(e) => { 
+                        e.currentTarget.onerror = null; 
+                        e.currentTarget.src = profileBasic;
+                    }} 
+                />
             </button>
             <AvatarModal isOpen={isAvatarModalOpen} onRequestClose={hideAvatarModal} />
             <h2 className={classes.userInfo}> {username} </h2>
