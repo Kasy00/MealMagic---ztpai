@@ -59,7 +59,6 @@ public class AuthController {
     @ResponseBody
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public ResponseEntity<String> registration(@Valid @RequestBody UserDto userDto, BindingResult result, Model model){
-        System.out.println("Received email: " + userDto.getEmail() + userDto.getUsername() + userDto.getPassword());
         User existingUser = userService.findByEmail(userDto.getEmail());
 
         if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){

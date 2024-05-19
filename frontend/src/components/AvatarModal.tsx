@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { createUseStyles } from 'react-jss';
 import axios from 'axios';
@@ -52,6 +52,15 @@ type AvatarModalProps = {
 const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => {
     const classes = useStyles();
     const fileInput = useRef<HTMLInputElement>(null);
+    const [userId, setUserId] = useState('');
+
+    useEffect(() => {
+        const decodedJwt = localStorage.getItem('decodedJwt');
+        if (decodedJwt) {
+            const { userId } = JSON.parse(decodedJwt);
+            setUserId(userId);
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -59,9 +68,10 @@ const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => 
         if (fileInput.current?.files?.length) {
             const file = fileInput.current.files[0];
             const formData = new FormData();
-            formData.append('profile-picture', file);
+            formData.append('file', file);
+            formData.append('userId', userId);
             try {
-                const response = await axios.post('/rest/user/avatar', formData, {
+                const response = await axios.post('/rest/upload/avatar', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
