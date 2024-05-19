@@ -2,6 +2,7 @@ import react, { useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import searchIcon from '../../assets/search.svg';
 import profileIcon from '../../assets/profile.svg';
+import axios from 'axios';
 
 const useStyles = createUseStyles({
     header: {
@@ -46,8 +47,8 @@ const useStyles = createUseStyles({
         justifyContent: 'center',
     },
     avatarImg: {
-        width: '3rem',
-        height: '3rem',
+        width: '5rem',
+        height: '5rem',
         borderRadius: '50%',
     },
     userName: {
@@ -98,14 +99,32 @@ const Header: React.FC<HeaderProps> = (props: any) => {
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [ingredientInput, setIngredientInput] = useState<string>('');
     const [username, setUsername] = useState('');
+    const [userId, setUserId] = useState('');
+    const [avatarPath, setAvatarPath] = useState('');
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
         if (decodedJwt) {
-            const { username } = JSON.parse(decodedJwt);
+            const { username, userId } = JSON.parse(decodedJwt);
             setUsername(username);
+            setUserId(userId);
         }
     }, []);
+
+    const fetchAvatarPath = async () => {
+        try {
+            if (userId) {
+                const response = await axios.get('/rest/upload/avatarPath', {params: {userId}});
+                setAvatarPath(`http://localhost:8080/${response.data}`);
+            }
+        } catch (error) {
+            console.error('Error fetching avatar path:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAvatarPath();
+    }, [userId]);
 
     const handleAddIngredient = () => {
         if(ingredients.indexOf(ingredientInput.trim()) > -1) {
@@ -153,7 +172,15 @@ const Header: React.FC<HeaderProps> = (props: any) => {
                 </form>
                 <div>
                     <a href="/profile" className={classes.profile}>
-                        <img src={profileIcon} alt="avatar" className={classes.avatarImg}/>
+                    <img 
+                        src={avatarPath} 
+                        className={classes.avatarImg} 
+                        alt="avatar" 
+                        onError={(e) => { 
+                            e.currentTarget.onerror = null; 
+                            e.currentTarget.src = profileIcon;
+                    }} 
+                />
                         <span className={classes.userName}> {username} </span>
                     </a>
                 </div>
