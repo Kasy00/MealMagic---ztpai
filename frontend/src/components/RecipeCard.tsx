@@ -34,12 +34,13 @@ const useStyles = createUseStyles({
 interface RecipeCardProps {
     image: string;
     title: string;
+    onClick: () => void;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ image, title }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ image, title, onClick }) => {
     const classes = useStyles();
     return (
-        <div className={classes.card}>
+        <div className={classes.card} onClick={onClick}>
             <img src={image} alt="" className={classes.recipeImg}></img>
             <div>
                 <h4 className={classes.recipeTitle}>{title}</h4>
