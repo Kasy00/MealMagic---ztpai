@@ -1,6 +1,8 @@
 package com.MealMagic.MealMagicApp.model;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "recipes")
 public class Recipe {
@@ -19,7 +21,8 @@ public class Recipe {
 
     @Column(nullable = false)
     private Integer servings = 1;
-
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<UserFavorite> userFavorites;
     public String getName(){
         return name;
     }
@@ -50,5 +53,13 @@ public class Recipe {
 
     public void setServings(Integer servings){
         this.servings = servings;
+    }
+
+    public List<UserFavorite> getUserFavorites() {
+        return userFavorites;
+    }
+
+    public void setUserFavorites(List<UserFavorite> userFavorites) {
+        this.userFavorites = userFavorites;
     }
 }

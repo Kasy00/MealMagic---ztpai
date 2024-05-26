@@ -71,8 +71,17 @@ const RecipesSection = (props: any) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [trendingRecipes, setTrendingRecipes] = useState<Recipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [userId, setUserId] = useState<number | undefined>(undefined);
   const classes = useStyles();
-  const apiKey = "bfa43ec4eb6c4c0ead14ff8c102dfb29";
+  const apiKey = "43a9675a98214cf99e2f931732573d7a";
+
+  useEffect(() => {
+    const decodedJwt = localStorage.getItem('decodedJwt');
+    if (decodedJwt) {
+        const { username, userId } = JSON.parse(decodedJwt);
+        setUserId(userId);
+    }
+}, []);
 
   const handleCardClick = async (recipeId: number) => {
     try {
@@ -184,6 +193,7 @@ const RecipesSection = (props: any) => {
               image={recipe.image}
               title={recipe.title}
               onClick={() => handleCardClick(recipe.id)}
+              userId={userId}
             />
           ))}
         </div>
@@ -198,6 +208,7 @@ const RecipesSection = (props: any) => {
               image={recipe.image}
               title={recipe.title}
               onClick={() => handleCardClick(recipe.id)}
+              userId={userId}
             />
           ))}
         </div>
@@ -212,6 +223,8 @@ const RecipesSection = (props: any) => {
           servings={selectedRecipe.servings}
           readyInMinutes={selectedRecipe.readyInMinutes}
           onClose={handleCloseModal}
+          recipeId={selectedRecipe.id}
+          userId={userId}
         />
       )}
     </div>

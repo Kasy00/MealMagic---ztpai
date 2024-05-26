@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createUseStyles } from "react-jss";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa6";
+import axios from "axios";
 
 const useStyles = createUseStyles({
     recipeModal: {
@@ -71,14 +74,51 @@ interface RecipeModalProps {
     servings: number;
     readyInMinutes: number;
     onClose: () => void;
+    recipeId: number;
+    userId: number | undefined;
 };
 
-const RecipeModal: React.FC<RecipeModalProps> = ({ title, image, ingredients, instructions, servings, readyInMinutes, onClose }) => {
+const RecipeModal: React.FC<RecipeModalProps> = ({ title, image, ingredients, instructions, servings, readyInMinutes, onClose, recipeId, userId }) => {
     const classes = useStyles();
+    const [isFavourite, setIsFavourite] = useState(false);
+    useEffect(() => {
+        const checkIfFavourite = async () => {
+            try {
+                const response = await axios.get(`/rest/favorites/check?userId=${userId}&recipeId=${recipeId}`);
+                setIsFavourite(response.data.isFavourite);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        checkIfFavourite();
+    }, [userId, recipeId]);
+
+    const handleFavouriteClick = async () => {
+        try {
+            if (typeof userId !== 'number' || isNaN(userId)) {
+                console.error('Invalid userId:', userId);
+                return;
+            }
+            console.log(userId, recipeId);
+            if (isFavourite) {
+                await axios.delete(`/rest/favorites/remove?userId=${userId}&recipeId=${recipeId}`);
+            } else {
+                await axios.post(`/rest/favorites/add?userId=${userId}&recipeId=${recipeId}`);
+            }
+            setIsFavourite(!isFavourite);
+        } catch (error) {
+            console.log(error);
+        }   
+    }
+
     return (
         <div className={classes.recipeModal}>
             <h1 className={classes.recipeTitle}>{title}</h1>
             <img src={image} alt={title} className={classes.recipeImg} />
+            <button onClick={handleFavouriteClick}>
+                {isFavourite ? <FaHeart size={32} color="red" /> : <FaRegHeart size={32} color="red" />}
+            </button>
             <h2 className={classes.headersText}>Ingredients</h2>
             <ul className={classes.ingredientsList}>
                 {ingredients.map((ingredient, index) => (

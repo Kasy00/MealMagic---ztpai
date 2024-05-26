@@ -34,9 +34,10 @@ interface RecipeCardProps {
     image: string;
     title: string;
     onClick: () => void;
+    userId?: number;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ image, title, onClick }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ image, title, onClick, userId }) => {
     const classes = useStyles();
     return (
         <div className={classes.card} onClick={onClick}>
