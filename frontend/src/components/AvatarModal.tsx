@@ -42,6 +42,9 @@ const useStyles = createUseStyles({
             },
         }
     },
+    error: {
+        color: 'red',
+    },
 });
 
 type AvatarModalProps = {
@@ -52,7 +55,8 @@ type AvatarModalProps = {
 const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => {
     const classes = useStyles();
     const fileInput = useRef<HTMLInputElement>(null);
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
@@ -79,8 +83,11 @@ const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => 
                 fileInput.current.value = '';
                 onRequestClose();
             } catch (error) {
+                setError('Error setting avatar. Please try again.');
                 console.error('Error setting avatar:', error);
             }
+        } else {
+            setError('No file selected. Please select a file.');
         }
     };
 
@@ -93,6 +100,7 @@ const AvatarModal: React.FC<AvatarModalProps> = ({ isOpen, onRequestClose }) => 
                 contentLabel="Avatar Modal"
             >
                 <form method="POST" id="avatar-form" encType="multipart/form-data" className={classes.photoForm} onSubmit={handleSubmit}>
+                    {error && <p className={classes.error}> {error} </p>}
                     <input ref={fileInput} type="file" name="profile-picture" id="profile-picture" accept=".png, .jpg, .jpeg"/>
                     <button type="submit">Set avatar</button>
                 </form>

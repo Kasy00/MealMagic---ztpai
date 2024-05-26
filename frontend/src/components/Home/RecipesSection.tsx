@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createUseStyles } from "react-jss";
 import RecipeCard from "../RecipeCard";
 import RecipeModal from "../RecipeModal";
@@ -170,7 +170,7 @@ const RecipesSection = (props: any) => {
   }, [props.ingredients, props.searchClicked]);
 
   useEffect(() => {
-    fetchTrendingRecipes();
+    //fetchTrendingRecipes();
   }, []);
 
   return (

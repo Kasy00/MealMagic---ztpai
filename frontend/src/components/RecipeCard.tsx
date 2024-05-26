@@ -1,6 +1,5 @@
-import react, { useState } from 'react';
+import React from 'react';
 import { createUseStyles } from 'react-jss';
-import pancake from '../assets/pancake.jpg';
 
 const useStyles = createUseStyles({
     card: {

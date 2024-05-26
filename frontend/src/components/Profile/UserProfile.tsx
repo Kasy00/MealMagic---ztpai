@@ -8,6 +8,7 @@ import settingsIcon from '../../assets/settings.svg';
 import profileBasic from '../../assets/profile-basic.jpg';
 import { logoutUser } from '../../services/UserService';
 import AvatarModal from '../AvatarModal';
+import BmiModal from '../BbmiModal';
 import axios from 'axios';
 
 Modal.setAppElement('#root');
@@ -61,8 +62,9 @@ const useStyles = createUseStyles({
         cursor: 'pointer',
     },
     profileAvatar: {
-        width: 'clamp(9rem, 12vw, 14rem)',
-        height: 'auto',
+        width: '20rem',
+        height: '20rem',
+        objectFit: 'cover',
         borderRadius: '50%',
     },
     logoutLink: {
@@ -77,7 +79,9 @@ const UserProfile = ()  => {
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
     const [avatarPath, setAvatarPath] = useState('');
+    const [userBmi, setUserBmi] = useState('');
     const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+    const [isBmiModalOpen, setIsBmiModalOpen] = useState(false);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
@@ -99,8 +103,20 @@ const UserProfile = ()  => {
         }
     };
 
+    const fetchUserBmi = async () => {
+        try {
+            if (userId) {
+                const response = await axios.get('/rest/bmi/get', {params: {userId}});
+                setUserBmi(response.data);
+            } 
+        } catch (error) {
+            console.error('Error fetching bmi:', error);
+        }
+    }
+
     useEffect(() => {
         fetchAvatarPath();
+        fetchUserBmi();
     }, [userId]);
 
     const showAvatarModal = () => {
@@ -110,6 +126,15 @@ const UserProfile = ()  => {
     const hideAvatarModal = () => {
         setIsAvatarModalOpen(false);
         fetchAvatarPath();
+    }
+
+    const showBmiModal = () => {
+        setIsBmiModalOpen(true);
+    }
+
+    const hideBmiModal = () => {
+        setIsBmiModalOpen(false);
+        fetchUserBmi();
     }
 
     const classes = useStyles();
@@ -127,10 +152,12 @@ const UserProfile = ()  => {
                 />
             </button>
             <AvatarModal isOpen={isAvatarModalOpen} onRequestClose={hideAvatarModal} />
-            <h2 className={classes.userInfo}> {username} </h2>
+            <BmiModal isOpen={isBmiModalOpen} onRequestClose={hideBmiModal} />
+            <h2 className={classes.userInfo}> {username}</h2>
+            <h3 className={classes.userInfo}> BMI: {userBmi} </h3> 
             <ul className={classes.userList}>
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>
-                <li className={classes.userListItem}><a className={classes.userListLink}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>
+                <li className={classes.userListItem}><a className={classes.userListLink} onClick={showBmiModal}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink}><img src={favouritesIcon} alt="favourites recipes" />Favourites recipes</a></li>
                 <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} onClick={logoutUser}><img src={logoutIcon} alt="logout" />Logout</a></li>
             </ul>
