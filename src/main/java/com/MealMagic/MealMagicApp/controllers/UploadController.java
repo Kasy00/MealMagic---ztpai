@@ -74,13 +74,16 @@ public class UploadController {
 
     @GetMapping("/avatarPath")
     public ResponseEntity<String> getUserAvatarPath(@RequestParam("userId") long userId) {
-        Optional<UserDetails> userDetailsOptional = userDetailsRepository.findById(userId);
-        if (userDetailsOptional.isPresent()) {
-            UserDetails userDetails = userDetailsOptional.get();
-            String avatarPath = userDetails.getAvatarPath();
-            return ResponseEntity.ok(avatarPath);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<UserDetails> userDetailsOptional = userDetailsRepository.findById(userId);
+            if (userDetailsOptional.isPresent()) {
+                UserDetails userDetails = userDetailsOptional.get();
+                return ResponseEntity.ok(userDetails.getAvatarPath());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
