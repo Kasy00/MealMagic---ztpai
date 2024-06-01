@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/rest/favorites")
@@ -74,5 +76,18 @@ public class FavoritesController {
     public ResponseEntity<Boolean> checkFavorite(@RequestParam("userId") Long userId, @RequestParam("recipeId") Long recipeId) {
         boolean isFavorite = userFavoriteRepository.existsByUserIdAndRecipeId(userId, recipeId);
         return ResponseEntity.ok(isFavorite);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Long>> getUserFavorites(@PathVariable Long userId) {
+        try {
+            List<UserFavorite> userFavorites = userFavoriteRepository.findByUserId(userId);
+            List<Long> favoriteRecipeIds = userFavorites.stream()
+                    .map(userFavorite -> userFavorite.getRecipe().getId())
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(favoriteRecipeIds);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

@@ -9,6 +9,7 @@ import profileBasic from '../../assets/profile-basic.jpg';
 import { logoutUser } from '../../services/UserService';
 import AvatarModal from '../AvatarModal';
 import BmiModal from '../BbmiModal';
+import FavoriteRecipes from '../FavoriteRecipes';
 import axios from 'axios';
 
 Modal.setAppElement('#root');
@@ -82,6 +83,7 @@ const UserProfile = ()  => {
     const [userBmi, setUserBmi] = useState('');
     const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
     const [isBmiModalOpen, setIsBmiModalOpen] = useState(false);
+    const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
@@ -137,7 +139,16 @@ const UserProfile = ()  => {
         fetchUserBmi();
     }
 
+    const toggleFavorites = () => {
+        setShowFavorites(prevShowFavorites => !prevShowFavorites);
+    };
+
     const classes = useStyles();
+
+    if (showFavorites) {
+        return <FavoriteRecipes />;
+    }
+
     return (
         <div className={classes.profileCard}>
             <button className={classes.profileAvatarBtn} onClick={showAvatarModal}>
@@ -158,7 +169,7 @@ const UserProfile = ()  => {
             <ul className={classes.userList}>
                 <li className={classes.userListItem}><a className={classes.userListLink} href="/home"><img src={settingsIcon} alt="settings" />Settings</a></li>
                 <li className={classes.userListItem}><a className={classes.userListLink} onClick={showBmiModal}><img src={bmiIcon} alt="BMI calculator" />BMI Calculator</a></li>
-                <li className={classes.userListItem}><a className={classes.userListLink}><img src={favouritesIcon} alt="favourites recipes" />Favourites recipes</a></li>
+                <li className={classes.userListItem}><a className={classes.userListLink} onClick={toggleFavorites}><img src={favouritesIcon} alt="favourites recipes" />Favourites recipes</a></li>
                 <li className={classes.userListItem}><a className={`${classes.userListLink} ${classes.logoutLink}`} onClick={logoutUser}><img src={logoutIcon} alt="logout" />Logout</a></li>
             </ul>
         </div>
