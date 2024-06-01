@@ -64,6 +64,18 @@ const useStyles = createUseStyles({
             transform: 'scale(0.95)',
         },
     },
+    favouriteBtn: {
+        backgroundColor: 'var(--accents)',
+        outline: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        '&:hover': {
+            transform: 'scale(1.05)',
+        },
+        '&:active': {
+            transform: 'scale(0.95)',
+        },
+    }
 });
 
 interface RecipeModalProps {
@@ -116,7 +128,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ title, image, ingredients, in
         <div className={classes.recipeModal}>
             <h1 className={classes.recipeTitle}>{title}</h1>
             <img src={image} alt={title} className={classes.recipeImg} />
-            <button onClick={handleFavouriteClick}>
+            <button onClick={handleFavouriteClick} className={classes.favouriteBtn}>
                 {isFavourite ? <FaHeart size={32} color="red" /> : <FaRegHeart size={32} color="red" />}
             </button>
             <h2 className={classes.headersText}>Ingredients</h2>

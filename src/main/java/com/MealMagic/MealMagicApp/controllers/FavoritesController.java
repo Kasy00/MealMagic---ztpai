@@ -34,13 +34,14 @@ public class FavoritesController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with ID " + userId + " not found.");
             }
 
-            Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-            if (recipeOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Recipe with ID " + recipeId + " not found.");
-            }
-
             User user = userOptional.get();
-            Recipe recipe = recipeOptional.get();
+
+            Recipe recipe = recipeRepository.findById(recipeId).orElseGet(() -> {
+                Recipe newRecipe = new Recipe();
+                newRecipe.setId(recipeId);
+                return recipeRepository.save(newRecipe);
+            });
+
             UserFavorite userFavorite = new UserFavorite();
             userFavorite.setUser(user);
             userFavorite.setRecipe(recipe);
