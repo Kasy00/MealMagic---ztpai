@@ -90,14 +90,14 @@ interface RecipeModalProps {
     userId: number | undefined;
 };
 
-const RecipeModal: React.FC<RecipeModalProps> = ({ title, image, ingredients, instructions, servings, readyInMinutes, onClose, recipeId, userId }) => {
+const RecipeModal: React.FC<RecipeModalProps> = ({ title, image, ingredients, instructions, servings, readyInMinutes, onClose, recipeId, userId}) => {
     const classes = useStyles();
     const [isFavourite, setIsFavourite] = useState(false);
     useEffect(() => {
         const checkIfFavourite = async () => {
             try {
                 const response = await axios.get(`/rest/favorites/check?userId=${userId}&recipeId=${recipeId}`);
-                setIsFavourite(response.data.isFavourite);
+                setIsFavourite(response.data);
             } catch (error) {
                 console.error(error);
             }

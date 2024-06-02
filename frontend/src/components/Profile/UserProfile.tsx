@@ -146,7 +146,7 @@ const UserProfile = ()  => {
     const classes = useStyles();
 
     if (showFavorites) {
-        return <FavoriteRecipes />;
+        return <FavoriteRecipes onBack={toggleFavorites} />;
     }
 
     return (

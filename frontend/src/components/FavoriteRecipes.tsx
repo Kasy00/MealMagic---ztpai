@@ -22,9 +22,28 @@ const useStyles = createUseStyles({
         gap: "1rem",
         padding: "1rem",
       },
+      header: {
+        display: 'flex',
+        justifyContent: 'space-between',
+      },
       title: {
         color: "var(--accents)",
         fontSize: "clamp(2.5rem, 2vw, 2rem)",
+      },
+      backBtn: {
+        padding: '0.5rem 1rem',
+        border: 'none',
+        fontWeight: 'bold',
+        backgroundColor: 'var(--accents)',
+        cursor: 'pointer',
+        color: 'var(--font-primary)',
+        borderRadius: '1rem',
+        '&:hover': {
+            transform: 'scale(1.05)',
+        },
+        '&:active': {
+            transform: 'scale(0.95)',
+        },
       },
 
       "@media (max-width: 768px)": {
@@ -47,7 +66,11 @@ type Recipe = {
   readyInMinutes: number;
 };
 
-const FavoriteRecipes = () => {
+interface FavoriteRecipesProps {
+  onBack: () => void;
+}
+
+const FavoriteRecipes: React.FC<FavoriteRecipesProps> = ({ onBack }) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [userId, setUserId] = useState<number | undefined>(undefined);
@@ -106,13 +129,14 @@ const FavoriteRecipes = () => {
 
   const handleCloseModal = () => {
     setSelectedRecipe(null);
+    fetchFavoriteRecipes();
   };
 
   return (
     <div className={classes.section}>
-      <div>
+      <div className={classes.header}>
         <h3 className={classes.title}>Your Favorite Recipes</h3>
-        <button>Back</button>
+        <button className={classes.backBtn} onClick={onBack}>Back</button>
       </div>
 
       <div className={classes.recipeCards}>

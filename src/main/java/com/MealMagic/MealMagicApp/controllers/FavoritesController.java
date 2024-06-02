@@ -38,6 +38,11 @@ public class FavoritesController {
 
             User user = userOptional.get();
 
+            boolean exists = userFavoriteRepository.existsByUserIdAndRecipeId(userId, recipeId);
+            if (exists) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Recipe with ID " + recipeId + " is already a favorite for user with ID " + userId);
+            }
+
             Recipe recipe = recipeRepository.findById(recipeId).orElseGet(() -> {
                 Recipe newRecipe = new Recipe();
                 newRecipe.setId(recipeId);
