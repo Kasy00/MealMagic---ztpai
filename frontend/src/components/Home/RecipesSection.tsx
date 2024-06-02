@@ -179,7 +179,7 @@ const RecipesSection = (props: any) => {
   }, [props.ingredients, props.searchClicked]);
 
   useEffect(() => {
-    //fetchTrendingRecipes();
+    fetchTrendingRecipes();
   }, []);
 
   return (
