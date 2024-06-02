@@ -86,12 +86,53 @@ const useStyles = createUseStyles({
       color: "#E21A4B",
     },
   },
+    adminPanel: {
+        display: "flex",
+        gap: "2rem",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        padding: "2rem",
+        width: "100%",
+    },
+    header: {
+        fontSize: "2rem",
+        color: "var(--accents)",
+    },
+    users: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "1rem",
+        padding: "1rem",
+        border: "2px solid var(--accents)",
+        borderRadius: "2rem",
+        backgroundColor: "var(--font-primary)",
+        width: "50%",
+    },
+    ingredients: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "1rem",
+        padding: "1rem",
+        border: "2px solid var(--accents)",
+        borderRadius: "2rem",
+        backgroundColor: "var(--font-primary)",
+        width: "50%",
+    },
 });
 
 interface User {
   id: number;
   username: string;
   email: string;
+}
+
+interface Ingredient {
+    id: number;
+    name: string;
 }
 
 const UserProfile: React.FC = () => {
@@ -104,6 +145,7 @@ const UserProfile: React.FC = () => {
   const [isBmiModalOpen, setIsBmiModalOpen] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
   useEffect(() => {
     const decodedJwt = localStorage.getItem("decodedJwt");
@@ -115,6 +157,7 @@ const UserProfile: React.FC = () => {
       if (roles.includes("ROLE_ADMIN")) {
         setIsAdmin(true);
         fetchUsers();
+        fetchIngredients();
       } else {
         setIsAdmin(false);
       }
@@ -198,6 +241,31 @@ const UserProfile: React.FC = () => {
     }
   };
 
+  const fetchIngredients = async () => {
+    try {
+      let token = localStorage.getItem("jwt");
+      if (!token) {
+        throw new Error("No token found in local storage");
+      }
+      token = token.replace(/"/g, "");
+      const response = await axios.get("/rest/admin/ingredients", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setIngredients(response.data);
+    } catch (error: any) {
+      if (error.response && error.response.status === 403) {
+        console.error(
+          "Error fetching users: Unauthorized access. Please check your token permissions."
+        );
+      } else {
+        console.error("Error fetching ingredients:", error);
+      }
+    }
+  };
+
+
   const classes = useStyles();
 
   if (showFavorites) {
@@ -224,19 +292,60 @@ const handleDeleteUser = async (userId: string) => {
     }
 };
 
+const handleDeleteIngredient = async (ingredientId: string) => {
+    try {
+        let token = localStorage.getItem('jwt');
+        if (!token) {
+            throw new Error("No token found in local storage");
+          }
+        token = token.replace(/"/g, "");
+        const response = await axios.delete(`http://localhost:3000/rest/admin/ingredients/${ingredientId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            setIngredients(ingredients.filter(ingredient => ingredient.id !== Number(ingredientId)));
+        }
+    } catch (error) {
+        console.error('Error deleting ingredient:', error);
+    }
+};
+
   return isAdmin ? (
-    <ul className={classes.userList}>
-      {users.map((user) => (
-        <li key={user.id} className={classes.userListItem}>
-          <div className={classes.userListLink}>
-            <span>{user.id}</span>
-            <span>{user.username}</span>
-            <span>{user.email}</span>
-            <button className={classes.deleteUserBtn} onClick={() => handleDeleteUser(user.id.toString())}>Delete</button>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div className={classes.adminPanel}>
+        <div className={classes.users}>
+            <h2 className={classes.header}>Users</h2>
+            <ul className={classes.userList}>
+            {users.map((user) => (
+                <li key={user.id} className={classes.userListItem}>
+                <div className={classes.userListLink}>
+                    <span>{user.id}</span>
+                    <span>{user.username}</span>
+                    <span>{user.email}</span>
+                    <button className={classes.deleteUserBtn} onClick={() => handleDeleteUser(user.id.toString())}>Delete</button>
+                </div>
+                </li>
+            ))}
+            </ul>
+        </div>
+        <div className={classes.ingredients}>
+            <h2 className={classes.header}>Ingredients</h2>
+            <ul className={classes.userList}>
+            {ingredients.map((ingredient) => (
+                <li key={ingredient.id} className={classes.userListItem}>
+                <div className={classes.userListLink}>
+                    <span>{ingredient.id}</span>
+                    <span>{ingredient.name}</span>
+                    <button className={classes.deleteUserBtn} onClick={() => handleDeleteIngredient(ingredient.id.toString())}>Delete</button>
+                </div>
+                </li>
+            ))}
+            </ul>
+        </div>
+        
+    </div>
+    
   ) : (
     <div className={classes.profileCard}>
       <button className={classes.profileAvatarBtn} onClick={showAvatarModal}>

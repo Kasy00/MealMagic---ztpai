@@ -41,25 +41,8 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/ingredients")
-    public ResponseEntity<?> addIngredient(@RequestParam String ingredientName){
-        try {
-            Ingredient existingIngredient = ingredientService.findByName(ingredientName);
-            if (existingIngredient != null) {
-                return ResponseEntity.badRequest().body("Ingredient already exists.");
-            }
-
-            Ingredient newIngredient = new Ingredient();
-            newIngredient.setName(ingredientName);
-            Ingredient savedIngredient = ingredientService.saveIngredient(newIngredient);
-
-            return ResponseEntity.ok(savedIngredient);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding ingredient.");
-        }
-    }
-
     @GetMapping("/ingredients")
+    @ResponseBody
     public List<Ingredient> getAllIngredients() {
         return ingredientService.findAllIngredients();
     }
