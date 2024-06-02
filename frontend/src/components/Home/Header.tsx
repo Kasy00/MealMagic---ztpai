@@ -88,10 +88,28 @@ const useStyles = createUseStyles({
             transform: 'scale(1.1)',
         },
     },
+    suggestions: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+        position: 'absolute',
+        top: '10rem',
+        width: 'clamp(170px, 70% + 1rem, 1000px)',
+        backgroundColor: 'var(--font-primary)',
+        color: 'var(--accents)',
+        borderRadius: '3rem',
+        padding: '1rem',
+        zIndex: 1,
+    },
 });
 
 interface HeaderProps {
     onFormSubmit: (newIngredients: string[]) => void;
+}
+
+interface Ingredient {
+    id: number;
+    name: string;
 }
 
 const Header: React.FC<HeaderProps> = (props: any) => {
@@ -100,7 +118,9 @@ const Header: React.FC<HeaderProps> = (props: any) => {
     const [ingredientInput, setIngredientInput] = useState<string>('');
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
+    const [isFocused, setIsFocused] = useState(false);
     const [avatarPath, setAvatarPath] = useState('');
+    const [ingredientSuggestion, setIngredientSuggestion] = useState<Ingredient[]>([]);
 
     useEffect(() => {
         const decodedJwt = localStorage.getItem('decodedJwt');
@@ -149,6 +169,32 @@ const Header: React.FC<HeaderProps> = (props: any) => {
         console.log('Form submitted header');
     }
 
+    const fetchIngredients = async (searchTerm: string) => {
+        try {
+            const response = await axios.get(`/rest/ingredients/all`, {
+                params: {
+                    name: searchTerm
+                }
+            });
+            setIngredientSuggestion(response.data);
+        } catch (error) {
+            console.error('Error fetching ingredients:', error);
+        }
+    };
+
+    const handleFocus = () => {
+        setIsFocused(true);
+    };
+
+    const handleBlur = () => {
+        setIsFocused(false);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIngredientInput(e.target.value);
+        fetchIngredients(e.target.value);
+    };
+
     const classes = useStyles();
     return (
         <div className={classes.header}>
@@ -158,10 +204,22 @@ const Header: React.FC<HeaderProps> = (props: any) => {
                             type="text" 
                             className={classes.searchBar} 
                             id="searchBar"
-                            onChange={(e) => setIngredientInput(e.target.value)}
                             value={ingredientInput}
-                            placeholder="Enter ingredients here"
+                            placeholder="Enter ingredient one by one..."
+                            onChange={handleInputChange}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
                         />
+                        {isFocused && ingredientSuggestion.length > 0 && ingredientInput !== '' && (
+                            <div className={classes.suggestions}>
+                                {ingredientSuggestion.map((ingredient) => (
+                                    <div key={ingredient.id}>
+                                        {ingredient.name}
+                                    </div>
+                                ))}
+                            </div>
+                        
+                        )}
                         <button className={classes.headerBtn} type="button" id="addIngredientButton" onClick={handleAddIngredient}>
                             Add
                         </button>

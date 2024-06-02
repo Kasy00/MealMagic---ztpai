@@ -44,12 +44,17 @@ const useStyles = createUseStyles({
     padding: "0",
     justifyContent: "center",
   },
-  userListItem: {
+  adminListItem: {
     gap: "1rem",
     fontWeight: "bold",
     padding: "1rem",
     border: "2px solid var(--accents)",
     transition: "color 0.2s ease-in-out",
+  },
+  userListItem: {
+    display: "flex",
+    gap: "1.5rem",
+    
   },
   userListLink: {
     textDecoration: "none",
@@ -57,6 +62,7 @@ const useStyles = createUseStyles({
     alignItems: "center",
     gap: "1.5rem",
     color: "var(--accents)",
+    cursor: "pointer",
   },
   deleteUserBtn: {
     backgroundColor: "var(--accents)",
@@ -318,7 +324,7 @@ const handleDeleteIngredient = async (ingredientId: string) => {
             <h2 className={classes.header}>Users</h2>
             <ul className={classes.userList}>
             {users.map((user) => (
-                <li key={user.id} className={classes.userListItem}>
+                <li key={user.id} className={classes.adminListItem}>
                 <div className={classes.userListLink}>
                     <span>{user.id}</span>
                     <span>{user.username}</span>
@@ -333,7 +339,7 @@ const handleDeleteIngredient = async (ingredientId: string) => {
             <h2 className={classes.header}>Ingredients</h2>
             <ul className={classes.userList}>
             {ingredients.map((ingredient) => (
-                <li key={ingredient.id} className={classes.userListItem}>
+                <li key={ingredient.id} className={classes.adminListItem}>
                 <div className={classes.userListLink}>
                     <span>{ingredient.id}</span>
                     <span>{ingredient.name}</span>
@@ -343,7 +349,13 @@ const handleDeleteIngredient = async (ingredientId: string) => {
             ))}
             </ul>
         </div>
-        
+        <a
+            className={`${classes.userListLink} ${classes.logoutLink}`}
+            onClick={logoutUser}
+          >
+            <img src={logoutIcon} alt="logout" />
+            Logout
+          </a>
     </div>
     
   ) : (
