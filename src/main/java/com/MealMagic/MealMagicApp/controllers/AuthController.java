@@ -75,10 +75,4 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully. Please login.");
     }
 
-    @GetMapping("/users")
-    public String users(Model model){
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }
 }

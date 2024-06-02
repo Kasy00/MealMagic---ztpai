@@ -11,14 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -40,25 +41,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            System.out.println("token : "+accessToken);
+
             Claims claims = jwtUtil.resolveClaims(request);
-
-            if(claims != null & jwtUtil.validateClaims(claims)){
+            if (claims != null && jwtUtil.validateClaims(claims)) {
                 String email = claims.getSubject();
-                System.out.println("email : "+email);
-                Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email,"",new ArrayList<>());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+                Collection<? extends GrantedAuthority> authorities =
+                        ((Collection<String>) claims.get("roles")).stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList());
 
-        }catch (Exception e){
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("User authenticated: " + email + " with roles: " + authorities);  // Logowanie
+            } else {
+                System.out.println("Invalid claims or token validation failed.");  // Logowanie
+            }
+        } catch (Exception e) {
             errorDetails.put("message", "Authentication Error");
-            errorDetails.put("details",e.getMessage());
+            errorDetails.put("details", e.getMessage());
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
             mapper.writeValue(response.getWriter(), errorDetails);
-
+            System.out.println("Authentication error: " + e.getMessage());  // Logowanie
         }
         filterChain.doFilter(request, response);
     }

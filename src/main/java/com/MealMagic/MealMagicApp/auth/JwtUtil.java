@@ -2,9 +2,12 @@ package com.MealMagic.MealMagicApp.auth;
 
 import com.MealMagic.MealMagicApp.model.User;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 import javax.naming.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.SecureRandom;
@@ -16,20 +19,20 @@ import java.util.List;
 @Component
 public class JwtUtil {
 
+    @Value("${app.secretKey}")
     private String secretKey;
     private long accessTokenValidityMillis = 30 * 24 * 60 * 60;
 
     private JwtParser jwtParser;
 
     private static final String TOKEN_HEADER = "Authorization";
-    private static final String TOKEN_PREFIX = "Bearer ";
+    private static final String TOKEN_PREFIX = "Bearer";
+
 
     @PostConstruct
     public void init() {
-        SecureRandom random = new SecureRandom();
-        byte[] keyBytes = new byte[32];
-        random.nextBytes(keyBytes);
-        this.secretKey = Base64.getEncoder().encodeToString(keyBytes);
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        this.secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
         this.jwtParser = Jwts.parserBuilder().setSigningKey(secretKey).build();
     }

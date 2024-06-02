@@ -46,9 +46,10 @@ public class SecurityConfig{
                 .authorizeRequests()
                 .requestMatchers("/rest/auth/login").permitAll()
                 .requestMatchers("/rest/auth/register").permitAll()
-                .requestMatchers("/users").hasRole("ADMIN")
+                .requestMatchers("/rest/admin/**").hasAuthority("ROLE_ADMIN")
                 .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        System.out.println("SecurityFilterChain configured");
         return http.build();
     }
 }

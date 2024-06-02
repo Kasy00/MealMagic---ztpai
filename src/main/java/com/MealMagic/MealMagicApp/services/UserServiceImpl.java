@@ -61,12 +61,18 @@ public class UserServiceImpl implements UserService{
     public List<UserDto> findAllUsers(){
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map((user) -> mapToUserDto(user))
+                .map(this::mapToUserDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         return userDto;
