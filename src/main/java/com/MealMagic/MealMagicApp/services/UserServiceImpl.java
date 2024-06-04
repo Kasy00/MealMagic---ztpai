@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void saveUser(UserDto userDto, boolean isAdmin){
-        System.out.println("Received email: " + userDto.getEmail() + userDto.getUsername() + userDto.getPassword());
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());

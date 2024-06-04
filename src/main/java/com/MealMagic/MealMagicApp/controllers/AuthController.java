@@ -6,6 +6,7 @@ import com.MealMagic.MealMagicApp.model.UserDto;
 import com.MealMagic.MealMagicApp.model.request.LoginReq;
 import com.MealMagic.MealMagicApp.model.response.ErrorRes;
 import com.MealMagic.MealMagicApp.model.response.LoginRes;
+import com.MealMagic.MealMagicApp.services.RabbitMQSender;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.MealMagic.MealMagicApp.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 @CrossOrigin(origins = "*")
@@ -25,13 +29,17 @@ import java.util.List;
 @RequestMapping("/rest/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private UserService userService;
     private JwtUtil jwtUtil;
+    private RabbitMQSender rabbitMQSender;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService ,JwtUtil jwtUtil) {
+    public AuthController(AuthenticationManager authenticationManager, UserService userService ,JwtUtil jwtUtil, RabbitMQSender rabbitMQSender) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.rabbitMQSender = rabbitMQSender;
     }
 
     @ResponseBody
@@ -72,6 +80,11 @@ public class AuthController {
         }
 
         userService.saveUser(userDto, false);
+
+        String message = "User registered successfully: " + userDto.getEmail();
+        rabbitMQSender.send(message);
+        logger.info(message);
+
         return ResponseEntity.ok("User registered successfully. Please login.");
     }
 
