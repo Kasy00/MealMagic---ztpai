@@ -155,6 +155,19 @@ const useStyles = createUseStyles({
       backgroundColor: "#E21A4B",
     },
   },
+  "@media (max-width: 768px)": {
+    adminPanel: {
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: "2rem",
+    },
+    users: {
+      width: "100%",
+    },
+    ingredients: {
+      width: "100%",
+    },
+  },
 });
 
 interface User {
