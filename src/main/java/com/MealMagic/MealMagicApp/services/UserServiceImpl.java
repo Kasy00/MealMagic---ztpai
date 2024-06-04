@@ -6,6 +6,7 @@ import com.MealMagic.MealMagicApp.model.UserDto;
 import com.MealMagic.MealMagicApp.repositories.RoleRepository;
 import com.MealMagic.MealMagicApp.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            throw new IllegalArgumentException("Cannot delete user with ADMIN role");
+        }
+
+        user.getRoles().clear();
+        userRepository.save(user);
         userRepository.deleteById(userId);
     }
 
