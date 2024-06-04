@@ -54,7 +54,6 @@ const useStyles = createUseStyles({
   userListItem: {
     display: "flex",
     gap: "1.5rem",
-    
   },
   userListLink: {
     textDecoration: "none",
@@ -92,42 +91,70 @@ const useStyles = createUseStyles({
       color: "#E21A4B",
     },
   },
-    adminPanel: {
-        display: "flex",
-        gap: "2rem",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        padding: "2rem",
-        width: "100%",
+  adminPanel: {
+    display: "flex",
+    gap: "2rem",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+    padding: "2rem",
+    width: "100%",
+  },
+  header: {
+    fontSize: "2rem",
+    color: "var(--accents)",
+  },
+  users: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "1rem",
+    padding: "1rem",
+    border: "2px solid var(--accents)",
+    borderRadius: "2rem",
+    backgroundColor: "var(--font-primary)",
+    width: "50%",
+    overflowY: "auto",
+    maxHeight: "100vh",
+    "&::-webkit-scrollbar": {
+      width: "0.5rem",
     },
-    header: {
-        fontSize: "2rem",
-        color: "var(--accents)",
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "transparent",
     },
-    users: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "1rem",
-        padding: "1rem",
-        border: "2px solid var(--accents)",
-        borderRadius: "2rem",
-        backgroundColor: "var(--font-primary)",
-        width: "50%",
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "var(--accents)",
+      borderRadius: "1rem",
     },
-    ingredients: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "1rem",
-        padding: "1rem",
-        border: "2px solid var(--accents)",
-        borderRadius: "2rem",
-        backgroundColor: "var(--font-primary)",
-        width: "50%",
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "#E21A4B",
     },
+  },
+  ingredients: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "1rem",
+    padding: "1rem",
+    border: "2px solid var(--accents)",
+    borderRadius: "2rem",
+    backgroundColor: "var(--font-primary)",
+    width: "50%",
+    overflowY: "auto",
+    maxHeight: "100vh",
+    "&::-webkit-scrollbar": {
+      width: "0.5rem",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "transparent",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "var(--accents)",
+      borderRadius: "1rem",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "#E21A4B",
+    },
+  },
 });
 
 interface User {
@@ -137,8 +164,8 @@ interface User {
 }
 
 interface Ingredient {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
 
 const UserProfile: React.FC = () => {
@@ -271,93 +298,113 @@ const UserProfile: React.FC = () => {
     }
   };
 
-
   const classes = useStyles();
 
   if (showFavorites) {
     return <FavoriteRecipes onBack={toggleFavorites} />;
   }
 
-const handleDeleteUser = async (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     try {
-        let token = localStorage.getItem('jwt');
-        if (!token) {
-            throw new Error("No token found in local storage");
-          }
-        token = token.replace(/"/g, "");
-        const response = await axios.delete(`http://localhost:3000/rest/admin/users/${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (response.status === 200) {
-            setUsers(users.filter(user => user.id !== Number(userId)));
+      let token = localStorage.getItem("jwt");
+      if (!token) {
+        throw new Error("No token found in local storage");
+      }
+      token = token.replace(/"/g, "");
+      const response = await axios.delete(
+        `http://localhost:3000/rest/admin/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (response.status === 200) {
+        setUsers(users.filter((user) => user.id !== Number(userId)));
+      }
     } catch (error) {
-        console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
-};
+  };
 
-const handleDeleteIngredient = async (ingredientId: string) => {
+  const handleDeleteIngredient = async (ingredientId: string) => {
     try {
-        let token = localStorage.getItem('jwt');
-        if (!token) {
-            throw new Error("No token found in local storage");
-          }
-        token = token.replace(/"/g, "");
-        const response = await axios.delete(`http://localhost:3000/rest/admin/ingredients/${ingredientId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (response.status === 200) {
-            setIngredients(ingredients.filter(ingredient => ingredient.id !== Number(ingredientId)));
+      let token = localStorage.getItem("jwt");
+      if (!token) {
+        throw new Error("No token found in local storage");
+      }
+      token = token.replace(/"/g, "");
+      const response = await axios.delete(
+        `http://localhost:3000/rest/admin/ingredients/${ingredientId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (response.status === 200) {
+        setIngredients(
+          ingredients.filter(
+            (ingredient) => ingredient.id !== Number(ingredientId)
+          )
+        );
+      }
     } catch (error) {
-        console.error('Error deleting ingredient:', error);
+      console.error("Error deleting ingredient:", error);
     }
-};
+  };
 
   return isAdmin ? (
     <div className={classes.adminPanel}>
-        <div className={classes.users}>
-            <h2 className={classes.header}>Users</h2>
-            <ul className={classes.userList}>
-            {users.map((user) => (
-                <li key={user.id} className={classes.adminListItem}>
-                <div className={classes.userListLink}>
-                    <span>{user.id}</span>
-                    <span>{user.username}</span>
-                    <span>{user.email}</span>
-                    <button className={classes.deleteUserBtn} onClick={() => handleDeleteUser(user.id.toString())}>Delete</button>
-                </div>
-                </li>
-            ))}
-            </ul>
-        </div>
-        <div className={classes.ingredients}>
-            <h2 className={classes.header}>Ingredients</h2>
-            <ul className={classes.userList}>
-            {ingredients.map((ingredient) => (
-                <li key={ingredient.id} className={classes.adminListItem}>
-                <div className={classes.userListLink}>
-                    <span>{ingredient.id}</span>
-                    <span>{ingredient.name}</span>
-                    <button className={classes.deleteUserBtn} onClick={() => handleDeleteIngredient(ingredient.id.toString())}>Delete</button>
-                </div>
-                </li>
-            ))}
-            </ul>
-        </div>
-        <a
-            className={`${classes.userListLink} ${classes.logoutLink}`}
-            onClick={logoutUser}
-          >
-            <img src={logoutIcon} alt="logout" />
-            Logout
-          </a>
+      <div className={classes.users}>
+        <h2 className={classes.header}>Users</h2>
+        <ul className={classes.userList}>
+          {users.map((user) => (
+            <li key={user.id} className={classes.adminListItem}>
+              <div className={classes.userListLink}>
+                <span>{user.id}</span>
+                <span>{user.username}</span>
+                <span>{user.email}</span>
+                <button
+                  className={classes.deleteUserBtn}
+                  onClick={() => handleDeleteUser(user.id.toString())}
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={classes.ingredients}>
+        <h2 className={classes.header}>Ingredients</h2>
+        <ul className={classes.userList}>
+          {ingredients.map((ingredient) => (
+            <li key={ingredient.id} className={classes.adminListItem}>
+              <div className={classes.userListLink}>
+                <span>{ingredient.id}</span>
+                <span>{ingredient.name}</span>
+                <button
+                  className={classes.deleteUserBtn}
+                  onClick={() =>
+                    handleDeleteIngredient(ingredient.id.toString())
+                  }
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <a
+        className={`${classes.userListLink} ${classes.logoutLink}`}
+        onClick={logoutUser}
+      >
+        <img src={logoutIcon} alt="logout" />
+        Logout
+      </a>
     </div>
-    
   ) : (
     <div className={classes.profileCard}>
       <button className={classes.profileAvatarBtn} onClick={showAvatarModal}>
