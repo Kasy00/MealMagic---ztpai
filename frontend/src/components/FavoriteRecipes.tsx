@@ -5,55 +5,55 @@ import RecipeModal from "./RecipeModal";
 import axios from "axios";
 
 const useStyles = createUseStyles({
-    section: {
-        display: "flex",
-        gap: "1rem",
-        flexDirection: "column",
-        padding: "1rem",
-        minHeight: "100vh",
-        width: "100%",
-        borderRadius: "1rem",
-        boxShadow: "0px 0px 100px 9px rgba(165, 33, 33, 0.28)",
-        border: "1px solid var(--font-primary)",
-      },
-      recipeCards: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "1rem",
-        padding: "1rem",
-      },
-      header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-      },
-      title: {
-        color: "var(--accents)",
-        fontSize: "clamp(2.5rem, 2vw, 2rem)",
-      },
-      backBtn: {
-        padding: '0.5rem 1rem',
-        border: 'none',
-        fontWeight: 'bold',
-        backgroundColor: 'var(--accents)',
-        cursor: 'pointer',
-        color: 'var(--font-primary)',
-        borderRadius: '1rem',
-        '&:hover': {
-            transform: 'scale(1.05)',
-        },
-        '&:active': {
-            transform: 'scale(0.95)',
-        },
-      },
+  section: {
+    display: "flex",
+    gap: "1rem",
+    flexDirection: "column",
+    padding: "1rem",
+    minHeight: "100vh",
+    width: "100%",
+    borderRadius: "1rem",
+    boxShadow: "0px 0px 100px 9px rgba(165, 33, 33, 0.28)",
+    border: "1px solid var(--font-primary)",
+  },
+  recipeCards: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "1rem",
+    padding: "1rem",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  title: {
+    color: "var(--accents)",
+    fontSize: "clamp(2.5rem, 2vw, 2rem)",
+  },
+  backBtn: {
+    padding: "0.5rem 1rem",
+    border: "none",
+    fontWeight: "bold",
+    backgroundColor: "var(--accents)",
+    cursor: "pointer",
+    color: "var(--font-primary)",
+    borderRadius: "1rem",
+    "&:hover": {
+      transform: "scale(1.05)",
+    },
+    "&:active": {
+      transform: "scale(0.95)",
+    },
+  },
 
-      "@media (max-width: 768px)": {
-        section: {
-          gridTemplateColumns: "1fr",
-        },
-        recipes: {
-          marginBottom: "1rem",
-        },
-      },
+  "@media (max-width: 768px)": {
+    section: {
+      gridTemplateColumns: "1fr",
+    },
+    recipes: {
+      marginBottom: "1rem",
+    },
+  },
 });
 
 type Recipe = {
@@ -75,10 +75,10 @@ const FavoriteRecipes: React.FC<FavoriteRecipesProps> = ({ onBack }) => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const classes = useStyles();
-  const apiKey = "43a9675a98214cf99e2f931732573d7a";
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   useEffect(() => {
-    const decodedJwt = localStorage.getItem('decodedJwt');
+    const decodedJwt = localStorage.getItem("decodedJwt");
     if (decodedJwt) {
       const { userId } = JSON.parse(decodedJwt);
       setUserId(userId);
@@ -136,7 +136,9 @@ const FavoriteRecipes: React.FC<FavoriteRecipesProps> = ({ onBack }) => {
     <div className={classes.section}>
       <div className={classes.header}>
         <h3 className={classes.title}>Your Favorite Recipes</h3>
-        <button className={classes.backBtn} onClick={onBack}>Back</button>
+        <button className={classes.backBtn} onClick={onBack}>
+          Back
+        </button>
       </div>
 
       <div className={classes.recipeCards}>

@@ -73,34 +73,36 @@ const RecipesSection = (props: any) => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const classes = useStyles();
-  const apiKey = "43a9675a98214cf99e2f931732573d7a";
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   useEffect(() => {
-    const decodedJwt = localStorage.getItem('decodedJwt');
+    const decodedJwt = localStorage.getItem("decodedJwt");
     if (decodedJwt) {
-        const { username, userId } = JSON.parse(decodedJwt);
-        setUserId(userId);
+      const { username, userId } = JSON.parse(decodedJwt);
+      setUserId(userId);
     }
-}, []);
+  }, []);
 
   const handleCardClick = async (recipeId: number) => {
     try {
       const response = await axios.get(
         `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`
       );
-  
+
       const recipeData = response.data;
-  
+
       const selectedRecipe = {
         id: recipeData.id,
         image: recipeData.image,
         title: recipeData.title,
-        ingredients: recipeData.extendedIngredients.map((ingredient: any) => ingredient.original),
+        ingredients: recipeData.extendedIngredients.map(
+          (ingredient: any) => ingredient.original
+        ),
         instructions: recipeData.instructions,
         servings: recipeData.servings,
         readyInMinutes: recipeData.readyInMinutes,
       };
-  
+
       setSelectedRecipe(selectedRecipe);
     } catch (error) {
       console.error(error);
@@ -126,12 +128,20 @@ const RecipesSection = (props: any) => {
         );
 
         const recipeData = response.data.results.map(
-          (recipe: { id: number, image: string, title: string, ingredients: string[], instructions: string, servings: number, readyInMinutes: number }) => ({
+          (recipe: {
+            id: number;
+            image: string;
+            title: string;
+            ingredients: string[];
+            instructions: string;
+            servings: number;
+            readyInMinutes: number;
+          }) => ({
             id: recipe.id,
             image: recipe.image,
             title: recipe.title,
             ingredients: recipe.ingredients || [],
-            instructions: recipe.instructions || '',
+            instructions: recipe.instructions || "",
             servings: recipe.servings || 0,
             readyInMinutes: recipe.readyInMinutes || 0,
           })
@@ -157,15 +167,23 @@ const RecipesSection = (props: any) => {
       );
 
       const trendingRecipeData = response.data.recipes.map(
-        (recipe: { id: number, image: string, title: string, ingredients: string[], instructions: string, servings: number, readyInMinutes: number }) => ({
-            id: recipe.id,
-            image: recipe.image,
-            title: recipe.title,
-            ingredients: recipe.ingredients || [],
-            instructions: recipe.instructions || '',
-            servings: recipe.servings || 0,
-            readyInMinutes: recipe.readyInMinutes || 0,
-          })
+        (recipe: {
+          id: number;
+          image: string;
+          title: string;
+          ingredients: string[];
+          instructions: string;
+          servings: number;
+          readyInMinutes: number;
+        }) => ({
+          id: recipe.id,
+          image: recipe.image,
+          title: recipe.title,
+          ingredients: recipe.ingredients || [],
+          instructions: recipe.instructions || "",
+          servings: recipe.servings || 0,
+          readyInMinutes: recipe.readyInMinutes || 0,
+        })
       );
 
       setTrendingRecipes(trendingRecipeData);
